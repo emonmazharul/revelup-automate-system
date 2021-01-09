@@ -26,5 +26,5 @@ let timer = setInterval(async () => {
 				console.log('still running on ' + new Date().toLocaleDateString());
 			}
 		}	 
-},60000*30 );
+},60000 * 6);
 
