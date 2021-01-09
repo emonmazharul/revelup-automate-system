@@ -1,0 +1,4 @@
+/node_modules
+/utils/scrap_product.js
+/.env
+/.gitignore

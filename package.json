@@ -1,0 +1,22 @@
+{
+  "name": "automate-upload",
+  "version": "1.0.0",
+  "description": "A node application which upload file on daily basis",
+  "main": "index.js",
+  "scripts": {
+    "dev":"env-cmd nodemon index.js",
+    "start":"node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "basic-ftp": "^4.6.3",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1",
+    "json2csv": "^5.0.5",
+    "mongoose": "^5.11.11",
+    "uuid": "^8.3.2"
+  }
+}
