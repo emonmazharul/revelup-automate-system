@@ -13,7 +13,7 @@ async function uploadFile(csv,host,user,password,isSecure) {
         })
         const Filestream = myCsvReadStream(csv);
         const readableStream = new Filestream();
-        const fileName = uuidv4().slice(5,13)+'.csv';
+        const fileName = 'auto'+uuidv4().slice(5,13)+'.csv';
         await client.uploadFrom(readableStream, fileName);
         return {isUploaded:'uploaded the file successfully to ftp server. '+ 'filename is ' + fileName}
     }
