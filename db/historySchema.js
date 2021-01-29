@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 
 const historySchema = new mongoose.Schema({
+	username:{
+		type:String,
+		required:true,
+	},
+	subdomain:{
+		type:String,
+		required:true,
+	},
 	uploadDate:{
 		type:String,
 		required:true,

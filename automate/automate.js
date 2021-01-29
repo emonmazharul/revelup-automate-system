@@ -3,80 +3,73 @@ const uploadFile = require('../utils/ftp');
 const csvCreator = require('../utils/obj');
 const History = require('../db/historySchema');
 const Errors = require('../db/errorSchema');
-
+const messageShower = require('../utils/messageShower');
+const dataFetcher = require('../utils/dataFetcher');
+const resourceDateMaker = require('../utils/resourceDateMaker');
 
 async function automate() {
 	const {today,yesterDay} = resourceDateMaker();
-	let cloneUser;
-	const history = new History({uploadDate:today,isDone:true});
 	try {
-		const {data:users} = await axios.get(process.env.SECRET_ROUTE, {
+		const {data} = await axios.get(process.env.SECRET_ROUTE, {
 				headers:{
 					Authorization:'Bearer ' + process.env.SECRET_CODE,
 				}
 		});
+		const users = data.filter(user => {
+			const [myHour,myMinutes] = user.scheduleTime.split(':').map(item => Number(item));
+			const currentHour = new Date().getHours();
+			const currentMinutes =  new Date().getMinutes();
+
+			if(myHour < currentHour){
+				return true;
+			}
+			if(myHour === currentHour){
+				return myMinutes >= currentMinutes ? true : false;
+			}
+
+		});
+
 		if(!users.length) {
 			return;
 		}
 		for(let i=0;i<users.length;i++){
-
 			const {subdomain,cookies,mall_code,tenant_code,ftp_url,ftp_username,ftp_password,isSecure,username} = users[i];
+			const doneUpload = await History.findOne({uploadDate:today,username,subdomain,isDone:true}) 
+			if(doneUpload) continue;
 			const {response,axiosError} = await dataFetcher(today,yesterDay,subdomain,cookies);
 			if(axiosError) { 
 				await new Errors({errorMsg:axiosError,username,errorDate:today,}).save();
+				await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 			} else {
 				if(!response.length){
 					const emptyCsv = '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'
 					const {isUploaded,errorMsg} = await uploadFile(emptyCsv,ftp_url,ftp_username,ftp_password,isSecure); 
-					console.log(isUploaded);
 					if(errorMsg) {
 						await new Errors({errorMsg,username,errorDate:today}).save();
+						await new History({uploadDate:today,username,subdomain,isDone:true}).save();
+					} else {
+						console.log(isUploaded);
+						await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 					}
 				} else {
 						const csv = csvCreator(response,mall_code,tenant_code);
 						const {isUploaded,errorMsg} = await uploadFile(csv,ftp_url,ftp_username,ftp_password,isSecure); 
-						console.log(isUploaded);
 						if(errorMsg) {
 							await new Errors({errorMsg,username,errorDate:today}).save();
+							await new History({uploadDate:today,username,subdomain,isDone:true}).save();
+						} else {
+							console.log(isUploaded);
+							await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 						}
 				}
 			}
 		}
 
-		await history.save();
-	
+		await messageShower();
 	} catch (e) {
-		console.log(e.message,'main function')
-	}
-}
-
-
-async function dataFetcher(today,yesterDay,subdomain,cookies){
-	try {
-		const url = `https://${subdomain}.revelup.com/resources/OrderAllInOne/?limit=0&created_date__gte=${yesterDay}T06:00:00&created_date__lte=${today}T06:00:00`;
-		const {data,status} = await axios.get(url,{
-			headers: {
-				Cookie:cookies,
-			}
-		});
-		if(status === 200 && Array.isArray(data.objects) ) {
-			return {response:data.objects};
-		}
-	} catch (e) {
-			if(e.message.includes(401)){
-				return {axiosError:'session expired. please submit the form again.'};
-			}
-	}
-}
-
-function resourceDateMaker () {
-	let today = new Date().toLocaleDateString();
-	const yesterDayDate = new Date().getDate() - 1;
-	let yesterDay = new Date().setDate(yesterDayDate);
-	yesterDay = new Date(yesterDay).toLocaleDateString();
-	return {
-		today:today.split('/').reverse().join('/'),
-		yesterDay:yesterDay.split('/').reverse().join('/')
+		console.log('GET ERROR AT ', new Date().toLocaleTimeString());
+		console.log('main function')
+		console.log(e);
 	}
 }
 
