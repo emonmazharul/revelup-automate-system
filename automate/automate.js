@@ -38,14 +38,16 @@ async function automate() {
 			if(doneUpload) continue;
 			const {response,axiosError} = await dataFetcher(today,yesterDay,subdomain,cookies);
 			if(axiosError) { 
-				await new Errors({errorMsg:axiosError,username,errorDate:today,}).save();
+				console.log(axiosError);
+				await new Errors({errorMsg:'axios error ' + axiosError,username,errorDate:today,subdomain}).save();
 				await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 			} else {
 				if(!response.length){
 					const emptyCsv = '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'
 					const {isUploaded,errorMsg} = await uploadFile(emptyCsv,ftp_url,ftp_username,ftp_password,isSecure); 
 					if(errorMsg) {
-						await new Errors({errorMsg,username,errorDate:today}).save();
+						console.log(errorMsg)
+						await new Errors({errorMsg,username,errorDate:today,subdomain}).save();
 						await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 					} else {
 						console.log(isUploaded);
@@ -55,7 +57,8 @@ async function automate() {
 						const csv = csvCreator(response,mall_code,tenant_code);
 						const {isUploaded,errorMsg} = await uploadFile(csv,ftp_url,ftp_username,ftp_password,isSecure); 
 						if(errorMsg) {
-							await new Errors({errorMsg,username,errorDate:today}).save();
+							console.log(errorMsg)
+							await new Errors({errorMsg,username,errorDate:today,subdomain}).save();
 							await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 						} else {
 							console.log(isUploaded);

@@ -13,22 +13,16 @@ const errorSchema = new mongoose.Schema({
 	errorDate:{
 		type:String,
 		required:true,
+	},
+	subdomain:{
+		type:String,
+		required:true,
 	}
 },{
 	timestamps:true,
 })
 
 
-// errorSchema.methods.addError = async function(errorMsg,username){
-// 	try {
-// 		const error = this;
-// 		error.errorMsgs = error.errorMsgs.concat({error:errorMsg,username});
-// 		await error.save();
-// 	}
-// 	catch (e) {
-// 		console.log('errorSchema error', e);
-// 	}
-// }
 
 const Errors = mongoose.model('Error', errorSchema);
 
