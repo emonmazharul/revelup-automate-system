@@ -2,4 +2,4 @@ const automate = require('./automate');
 
 setTimeout(async () => {
 	await automate();
-},  2000);
+},  60000);
