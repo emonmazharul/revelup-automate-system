@@ -41,7 +41,7 @@ async function automate() {
 			if(axiosError) { 
 				console.log(axiosError);
 				await new Errors({errorMsg:'axios error ' + axiosError,username,errorDate:today,subdomain}).save();
-				await new History({uploadDate:today,username,subdomain,isDone:true}).save();
+				// await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 			} else {
 				if(!response.length){
 					const emptyCsv = '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'
