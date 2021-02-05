@@ -1,5 +1,5 @@
 const automate = require('./automate');
 
-setTimeout(async () => {
+setInterval(async () => {
 	await automate();
-},  60000);
+},60000*30);

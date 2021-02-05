@@ -35,7 +35,8 @@ async function automate() {
 		for(let i=0;i<users.length;i++){
 			const {subdomain,cookies,mall_code,tenant_code,ftp_url,ftp_username,ftp_password,isSecure,username} = users[i];
 			const doneUpload = await History.findOne({uploadDate:today,username,subdomain,isDone:true}) 
-			if(doneUpload) continue;
+			const hasErrorOnUpload = await Errors.findOne({errorDate:today,username,subdomain});
+			if(doneUpload || hasErrorOnUpload) continue;
 			const {response,axiosError} = await dataFetcher(today,yesterDay,subdomain,cookies);
 			if(axiosError) { 
 				console.log(axiosError);

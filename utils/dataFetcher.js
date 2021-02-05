@@ -13,7 +13,6 @@ async function dataFetcher(today,yesterDay,subdomain,cookies){
 			return {response:data.objects};
 		}
 	} catch (e) {
-		console.log(e);
 			if(e.message.includes(401)){
 				return {axiosError:'session expired. please submit the form again.'};
 			}
