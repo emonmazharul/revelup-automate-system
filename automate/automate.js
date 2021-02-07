@@ -41,7 +41,6 @@ async function automate() {
 			if(axiosError) { 
 				console.log(axiosError);
 				await new Errors({errorMsg:'axios error ' + axiosError,username,errorDate:today,subdomain}).save();
-				// await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 			} else {
 				if(!response.length){
 					const emptyCsv = '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'
@@ -49,7 +48,6 @@ async function automate() {
 					if(errorMsg) {
 						console.log(errorMsg)
 						await new Errors({errorMsg,username,errorDate:today,subdomain}).save();
-						await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 					} else {
 						console.log(isUploaded);
 						await new History({uploadDate:today,username,subdomain,isDone:true}).save();
@@ -60,7 +58,6 @@ async function automate() {
 						if(errorMsg) {
 							console.log(errorMsg)
 							await new Errors({errorMsg,username,errorDate:today,subdomain}).save();
-							await new History({uploadDate:today,username,subdomain,isDone:true}).save();
 						} else {
 							console.log(isUploaded);
 							await new History({uploadDate:today,username,subdomain,isDone:true}).save();
