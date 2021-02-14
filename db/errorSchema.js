@@ -17,7 +17,10 @@ const errorSchema = new mongoose.Schema({
 	subdomain:{
 		type:String,
 		required:true,
-	}
+	},	
+	establishment_code:{
+		type:String,
+	},
 },{
 	timestamps:true,
 })

@@ -32,35 +32,41 @@ async function automate() {
 		if(!users.length) {
 			return;
 		}
+
 		for(let i=0;i<users.length;i++){
-			const {subdomain,cookies,mall_code,tenant_code,ftp_url,ftp_username,ftp_password,isSecure,username} = users[i];
-			const doneUpload = await History.findOne({uploadDate:today,username,subdomain,isDone:true}) 
-			const hasErrorOnUpload = await Errors.findOne({errorDate:today,username,subdomain});
+			
+			const {subdomain,cookies,mall_code,tenant_code,ftp_url,ftp_username,ftp_password,isSecure,username,establishment_code} = users[i];
+			
+
+			const doneUpload = await History.findOne({uploadDate:today,username,subdomain,establishment_code,isDone:true}) 
+			const hasErrorOnUpload = await Errors.findOne({errorDate:today,username,subdomain,establishment_code});
+
 			if(doneUpload || hasErrorOnUpload) continue;
+			
 			const {response,axiosError} = await dataFetcher(today,yesterDay,subdomain,cookies);
 			if(axiosError) { 
 				console.log(axiosError);
-				await new Errors({errorMsg:'axios error ' + axiosError,username,errorDate:today,subdomain}).save();
+				await new Errors({errorMsg:axiosError,username,errorDate:today,subdomain,establishment_code}).save();
 			} else {
 				if(!response.length){
 					const emptyCsv = '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'
 					const {isUploaded,errorMsg} = await uploadFile(emptyCsv,ftp_url,ftp_username,ftp_password,isSecure); 
 					if(errorMsg) {
 						console.log(errorMsg)
-						await new Errors({errorMsg,username,errorDate:today,subdomain}).save();
+						await new Errors({errorMsg,username,errorDate:today,subdomain,establishment_code}).save();
 					} else {
 						console.log(isUploaded);
-						await new History({uploadDate:today,username,subdomain,isDone:true}).save();
+						await new History({uploadDate:today,username,subdomain,establishment_code,isDone:true}).save();
 					}
 				} else {
 						const csv = csvCreator(response,mall_code,tenant_code);
 						const {isUploaded,errorMsg} = await uploadFile(csv,ftp_url,ftp_username,ftp_password,isSecure); 
 						if(errorMsg) {
 							console.log(errorMsg)
-							await new Errors({errorMsg,username,errorDate:today,subdomain}).save();
+							await new Errors({errorMsg,username,errorDate:today,subdomain,establishment_code}).save();
 						} else {
 							console.log(isUploaded);
-							await new History({uploadDate:today,username,subdomain,isDone:true}).save();
+							await new History({uploadDate:today,username,subdomain,establishment_code,isDone:true}).save();
 						}
 				}
 			}

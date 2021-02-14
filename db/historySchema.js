@@ -18,6 +18,9 @@ const historySchema = new mongoose.Schema({
 		type:Boolean,
 		required:true,
 	},
+	establishment_code:{
+		type:String,
+	},
 },{
 	timestamps:true,
 })
