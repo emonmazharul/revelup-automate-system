@@ -10,11 +10,12 @@ const resourceDateMaker = require('../utils/resourceDateMaker');
 async function automate() {
 	const {today,yesterDay} = resourceDateMaker();
 	try {
-		const {data} = await axios.get(process.env.SECRET_ROUTE, {
+		const {data,status} = await axios.get(process.env.SECRET_ROUTE, {
 				headers:{
 					Authorization:'Bearer ' + process.env.SECRET_CODE,
 				}
 		});
+
 		const users = data.filter(user => {
 			const [myHour,myMinutes] = user.scheduleTime.split(':').map(item => Number(item));
 			const currentHour = new Date().getHours();
@@ -30,6 +31,7 @@ async function automate() {
 		});
 
 		if(!users.length) {
+			console.log('no available user to upload for this time');
 			return;
 		}
 
@@ -44,6 +46,7 @@ async function automate() {
 			if(doneUpload || hasErrorOnUpload) continue;
 			
 			const {response,axiosError} = await dataFetcher(today,yesterDay,subdomain,cookies);
+
 			if(axiosError) { 
 				console.log(axiosError);
 				await new Errors({errorMsg:axiosError,username,errorDate:today,subdomain,establishment_code}).save();

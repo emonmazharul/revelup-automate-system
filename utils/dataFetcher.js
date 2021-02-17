@@ -9,6 +9,7 @@ function modifyCookie(cookies) {
 }
 
 async function dataFetcher(today,yesterDay,subdomain,cookies){
+	console.log('called');
 	cookies = modifyCookie(cookies);
 	try {
 		const url = `https://${subdomain}.revelup.com/resources/OrderAllInOne/?limit=0&created_date__gte=${yesterDay}T06:00:00&created_date__lte=${today}T06:00:00`;
@@ -18,10 +19,15 @@ async function dataFetcher(today,yesterDay,subdomain,cookies){
 				Cookie:cookies,
 			}
 		});
+		
+		console.log(status, Array.isArray(data.objects));
+
 		if(status === 200 && Array.isArray(data.objects) ) {
 			// console.log(data.objects.final_total);
 			return {response:data.objects};
 		}
+		console.log(data,'data which has no mean');
+		return {axiosError:'a unknown error occuered in server'};
 	} catch (e) {
 		console.log(e.message);
 			if(e.message.includes(401)){
