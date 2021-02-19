@@ -9,7 +9,7 @@ function modifyCookie(cookies) {
 }
 
 async function dataFetcher(today,yesterDay,subdomain,cookies){
-	console.log('called');
+	
 	cookies = modifyCookie(cookies);
 	try {
 		const url = `https://${subdomain}.revelup.com/resources/OrderAllInOne/?limit=0&created_date__gte=${yesterDay}T06:00:00&created_date__lte=${today}T06:00:00`;
