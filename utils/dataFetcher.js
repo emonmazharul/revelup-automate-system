@@ -29,6 +29,8 @@ async function dataFetcher(today,yesterDay,subdomain,cookies){
 		console.log(data,'data which has no mean');
 		return {axiosError:'a unknown error occuered in server'};
 	} catch (e) {
+		console.log('error in axios');
+		console.log(e);
 		console.log(e.message);
 			if(e.message.includes(401)){
 				return {axiosError:'session expired. please submit the form again.'};
