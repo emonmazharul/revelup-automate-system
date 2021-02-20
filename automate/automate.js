@@ -8,7 +8,7 @@ const dataFetcher = require('../utils/dataFetcher');
 const resourceDateMaker = require('../utils/resourceDateMaker');
 
 async function automate() {
-	const {today,yesterDay} = {today:'2021-01-06', yesterDay:'2020-01-05'};
+	const {today,yesterDay} = {today:'2021-01-06', yesterDay:'2021-01-05'};
 	try {
 		const {data,status} = await axios.get(process.env.SECRET_ROUTE, {
 				headers:{
