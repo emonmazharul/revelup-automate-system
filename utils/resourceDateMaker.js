@@ -7,8 +7,8 @@ function resourceDateMaker () {
 	const [yesterDayMonth,yesterDaydate,yesterDayYear] = yesterDay.split('/');
 
 	return {
-		today:todayYear+ '/' +todayMonth+ '/' +todayDate,
-		yesterDay:yesterDayYear+ '/' + yesterDayMonth+ '/' + yesterDaydate
+		today:todayYear+ '-' + todayMonth + '-' +todayDate,
+		yesterDay:yesterDayYear+ '-' + yesterDayMonth+ '-' + yesterDaydate
 	}
 }
 
