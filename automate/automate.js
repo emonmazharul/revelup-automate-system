@@ -8,7 +8,7 @@ const dataFetcher = require('../utils/dataFetcher');
 const resourceDateMaker = require('../utils/resourceDateMaker');
 
 async function automate() {
-	const {today,yesterDay} = resourceDateMaker();
+	const {today,yesterDay} = {today:'2021-01-06', yesterDay:'2020-01-05'};
 	try {
 		const {data,status} = await axios.get(process.env.SECRET_ROUTE, {
 				headers:{
@@ -29,14 +29,14 @@ async function automate() {
 			}
 
 		});
-
+		console.log(users)
 		if(!users.length) {
 			console.log('no available user to upload for this time');
 			return;
 		}
 
 		for(let i=0;i<users.length;i++){
-			
+			console.log(i);
 			const {subdomain,cookies,mall_code,tenant_code,ftp_url,ftp_username,ftp_password,isSecure,username,establishment_code} = users[i];
 			
 
