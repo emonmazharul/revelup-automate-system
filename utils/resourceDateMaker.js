@@ -3,10 +3,12 @@ function resourceDateMaker () {
 	const yesterDayDate = new Date().getDate() - 1;
 	let yesterDay = new Date().setDate(yesterDayDate);
 	yesterDay = new Date(yesterDay).toLocaleDateString();
-	console.log(today,yesterDay);
+	const [todayMonth,todayDate,todayYear] = today.split('/');
+	const [yesterDayMonth,yesterDayDate,yesterDayYear] = yesterDay.split('/');
+
 	return {
-		today:today.split('/').reverse().join('-'),
-		yesterDay:yesterDay.split('/').reverse().join('-')
+		today:todayYear+todayMonth+todayDate,
+		yesterDay:yesterDayYear+yesterDayMonth+yesterDayDate
 	}
 }
 
