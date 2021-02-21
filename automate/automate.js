@@ -9,7 +9,7 @@ const resourceDateMaker = require('../utils/resourceDateMaker');
 
 async function automate() {
 	const {today,yesterDay} = resourceDateMaker();
-	
+	console.log(today,yesterDay)
 	try {
 		const {data,status} = await axios.get(process.env.SECRET_ROUTE, {
 				headers:{

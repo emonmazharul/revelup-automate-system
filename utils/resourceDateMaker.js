@@ -13,5 +13,4 @@ function resourceDateMaker () {
 	}
 }
 
-
 module.exports = resourceDateMaker;
